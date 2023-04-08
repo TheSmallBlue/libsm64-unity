@@ -18,6 +18,10 @@ namespace LibSM64
         Vector2[] uvBuffer;
         int buffIndex;
         Interop.SM64MarioState[] states;
+        [HideInInspector]
+        public int marioHealth;
+        [HideInInspector]
+        public uint marioAction;
 
         GameObject marioRendererObject;
         Mesh marioMesh;
@@ -126,6 +130,11 @@ namespace LibSM64
 
             marioMesh.RecalculateBounds();
             marioMesh.RecalculateTangents();
+
+            marioHealth = (int)states[0].health / 272;
+
+            marioAction = states[0].action;
+            
         }
 
         void OnDrawGizmos()
@@ -135,6 +144,37 @@ namespace LibSM64
                 Gizmos.color = Color.red;
                 Gizmos.DrawSphere( transform.position, 0.5f );
             }
+        }
+
+        public void SetHealth(int newHealth){
+            Interop.SetMarioHealth(marioId, (short)(newHealth * 272));
+        }
+        public void SetCap(uint cap, short time){
+            Interop.MarioInteractCap(marioId,cap,time);
+        }
+        public void TakeDamage(uint damage, Vector3 dir, uint subtype = 8){
+            Interop.MarioTakeDamage(marioId,damage,subtype,dir.x,dir.y,dir.z);
+        }
+        public void SetPos(Vector3 pos){
+            Interop.SetMarioPosition(marioId, pos.x, pos.y, pos.z);
+        }
+        public void SetVel(Vector3 vel){
+            Interop.SetMarioVelocity(marioId, vel.x, vel.y, vel.z);
+        }
+        public void SetAnim(uint animID){
+            Interop.SetMarioAnimation(marioId,animID);
+        }
+        public void SetAction(uint setAction){
+            Interop.SetMarioAction(marioId,setAction);
+        }
+        public void SetState(uint flags){
+            Interop.SetMarioSTate(marioId,flags);
+        }
+        public void Heal(byte amount){
+            Interop.MarioHeal(marioId, amount);
+        }
+        public void Kill(){
+            Interop.MarioKill(marioId);
         }
     }
 }

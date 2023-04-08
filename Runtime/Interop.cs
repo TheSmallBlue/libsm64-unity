@@ -42,6 +42,7 @@ namespace LibSM64
             public float[] velocity;
             public float faceAngle;
             public short health;
+            public uint action;
 
             public Vector3 unityPosition {
                 get { return position != null ? new Vector3( -position[0], position[1], position[2] ) / SCALE_FACTOR : Vector3.zero; }
@@ -62,9 +63,9 @@ namespace LibSM64
         struct SM64ObjectTransform
         {
             [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 3)]
-            float[] position;
+            public float[] position;
             [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 3)]
-            float[] eulerRotation;
+            public float[] eulerRotation;
 
             static public SM64ObjectTransform FromUnityWorld( Vector3 position, Quaternion rotation )
             {
@@ -119,6 +120,28 @@ namespace LibSM64
         static extern void sm64_mario_tick( uint marioId, ref SM64MarioInputs inputs, ref SM64MarioState outState, ref SM64MarioGeometryBuffers outBuffers );
         [DllImport("sm64")]
         static extern void sm64_mario_delete( uint marioId );
+
+        [DllImport("sm64")]
+        static extern void sm64_set_mario_action(uint marioId, uint action);
+        [DllImport("sm64")]
+        static extern void sm64_set_mario_animation(uint marioId, uint animID);
+        [DllImport("sm64")]
+        static extern void sm64_set_mario_state(uint marioId, uint flags);
+        [DllImport("sm64")]
+        static extern void sm64_set_mario_position( uint marioId, float x, float y, float z );
+        [DllImport("sm64")]
+        static extern void sm64_set_mario_velocity(uint marioId, float x, float y, float z);
+        [DllImport("sm64")]
+        static extern void sm64_set_mario_health(uint marioId, short health);
+        [DllImport("sm64")]
+        static extern void sm64_mario_take_damage(uint marioId, uint damage, uint subtype, float x, float y, float z);
+        [DllImport("sm64")]
+        static extern void sm64_mario_heal(uint marioId, byte healCounter);
+        [DllImport("sm64")]
+        static extern void sm64_mario_kill(uint marioId);
+        [DllImport("sm64")]
+        static extern void sm64_mario_interact_cap(uint marioId, uint capFlag, short capTime, byte playMusic);
+        
 
         [DllImport("sm64")]
         static extern uint sm64_surface_object_create( ref SM64SurfaceObject surfaceObject );
@@ -215,6 +238,42 @@ namespace LibSM64
         public static void MarioDelete( uint marioId )
         {
             sm64_mario_delete( marioId );
+        }
+
+        public static void SetMarioAction(uint marioId, uint setAction){
+            sm64_set_mario_action(marioId, setAction);
+        }
+        public static void SetMarioAnimation(uint marioId, uint animID){
+            sm64_set_mario_animation(marioId,animID);
+        }
+        public static void SetMarioSTate(uint marioId, uint flags){
+            sm64_set_mario_state(marioId,flags);
+        }
+        public static void SetMarioPosition(uint marioId, float x, float y, float z){
+            var t = SM64ObjectTransform.FromUnityWorld( new Vector3(x,y,z), Quaternion.Euler(0,0,0));
+            sm64_set_mario_position(marioId,t.position[0],t.position[1],t.position[2]);
+        }
+        public static void SetMarioVelocity(uint marioId, float x, float y, float z){
+            sm64_set_mario_position(marioId,x,y,z);
+        }
+        public static void SetMarioHealth(uint marioId, short newHealth){
+            sm64_set_mario_health(marioId,newHealth);
+        }
+
+        public static void MarioTakeDamage(uint marioId, uint damage, uint subtype, float x, float y, float z){
+            sm64_mario_take_damage(marioId,damage,subtype,x,y,z);
+        }
+
+        public static void MarioHeal(uint marioId, byte healCounter){
+            sm64_mario_heal(marioId,healCounter);
+        }
+
+        public static void MarioKill(uint marioId){
+            sm64_mario_kill(marioId);
+        }
+
+        public static void MarioInteractCap(uint marioId, uint capFlag, short capTime, byte playMusic = (byte)0){
+            sm64_mario_interact_cap(marioId, capFlag, capTime, playMusic);
         }
 
         public static uint SurfaceObjectCreate( Vector3 position, Quaternion rotation, SM64Surface[] surfaces )
