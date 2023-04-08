@@ -18,10 +18,19 @@ namespace LibSM64
         Vector2[] uvBuffer;
         int buffIndex;
         Interop.SM64MarioState[] states;
+
         [HideInInspector]
         public int marioHealth;
         [HideInInspector]
         public uint marioAction;
+        [HideInInspector]
+        public uint marioFlags;
+        [HideInInspector]
+        public uint marioParticleFlags;
+        [HideInInspector]
+        public short marioInvincTimer;
+        [HideInInspector]
+        public float marioFaceAngle;
 
         GameObject marioRendererObject;
         Mesh marioMesh;
@@ -132,8 +141,12 @@ namespace LibSM64
             marioMesh.RecalculateTangents();
 
             marioHealth = (int)states[0].health / 272;
-
             marioAction = states[0].action;
+            marioFlags = states[0].flags;
+            marioInvincTimer = states[0].invincTimer;
+            marioParticleFlags = states[0].particleFlags;
+            marioFaceAngle = states[0].faceAngle;
+            
             
         }
 
@@ -158,8 +171,14 @@ namespace LibSM64
         public void SetPos(Vector3 pos){
             Interop.SetMarioPosition(marioId, pos.x, pos.y, pos.z);
         }
+        public void SetFaceangle(float y){
+            Interop.SetMarioFaceangle(marioId,-y / 58);
+        }
         public void SetVel(Vector3 vel){
             Interop.SetMarioVelocity(marioId, vel.x, vel.y, vel.z);
+        }
+        public void SetForwVel(float vel){
+            Interop.SetMarioForwardVelocity(marioId, vel);
         }
         public void SetAnim(uint animID){
             Interop.SetMarioAnimation(marioId,animID);
@@ -175,6 +194,9 @@ namespace LibSM64
         }
         public void Kill(){
             Interop.MarioKill(marioId);
+        }
+        public void SetWaterLevel(int level){
+            Interop.SetMarioWaterLevel(marioId,level);
         }
     }
 }

@@ -43,6 +43,9 @@ namespace LibSM64
             public float faceAngle;
             public short health;
             public uint action;
+            public uint flags;
+            public uint particleFlags;
+            public short invincTimer;
 
             public Vector3 unityPosition {
                 get { return position != null ? new Vector3( -position[0], position[1], position[2] ) / SCALE_FACTOR : Vector3.zero; }
@@ -130,9 +133,15 @@ namespace LibSM64
         [DllImport("sm64")]
         static extern void sm64_set_mario_position( uint marioId, float x, float y, float z );
         [DllImport("sm64")]
+        static extern void sm64_set_mario_faceangle(uint marioId, float y);
+        [DllImport("sm64")]
         static extern void sm64_set_mario_velocity(uint marioId, float x, float y, float z);
         [DllImport("sm64")]
+        static extern void sm64_set_mario_forward_velocity(uint marioId, float vel);
+        [DllImport("sm64")]
         static extern void sm64_set_mario_health(uint marioId, short health);
+        [DllImport("sm64")]
+        static extern void sm64_set_mario_water_level(uint marioId, int level);
         [DllImport("sm64")]
         static extern void sm64_mario_take_damage(uint marioId, uint damage, uint subtype, float x, float y, float z);
         [DllImport("sm64")]
@@ -253,13 +262,22 @@ namespace LibSM64
             var t = SM64ObjectTransform.FromUnityWorld( new Vector3(x,y,z), Quaternion.Euler(0,0,0));
             sm64_set_mario_position(marioId,t.position[0],t.position[1],t.position[2]);
         }
+        public static void SetMarioFaceangle(uint marioId, float y){
+            Interop.sm64_set_mario_faceangle(marioId, y);
+        }
         public static void SetMarioVelocity(uint marioId, float x, float y, float z){
-            sm64_set_mario_position(marioId,x,y,z);
+            sm64_set_mario_velocity(marioId,x,y,z);
+        }
+        public static void SetMarioForwardVelocity(uint marioId, float vel){
+            sm64_set_mario_forward_velocity(marioId,vel);
         }
         public static void SetMarioHealth(uint marioId, short newHealth){
             sm64_set_mario_health(marioId,newHealth);
         }
-
+        public static void SetMarioWaterLevel(uint marioId, int level){
+            var t = SM64ObjectTransform.FromUnityWorld( new Vector3(0,level,0), Quaternion.Euler(0,0,0));
+            sm64_set_mario_water_level(marioId,(int)t.position[1]);
+        }
         public static void MarioTakeDamage(uint marioId, uint damage, uint subtype, float x, float y, float z){
             sm64_mario_take_damage(marioId,damage,subtype,x,y,z);
         }

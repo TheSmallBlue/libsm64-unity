@@ -26,6 +26,30 @@ namespace LibSM64{
         public const uint MARIO_UNKNOWN_30 = 0x40000000;
         public const uint MARIO_UNKNOWN_31 = 0x80000000;
 
+        // FLAGS
+        public const uint ACT_FLAG_STATIONARY = 0x00000200;
+        public const uint ACT_FLAG_MOVING = 0x00000400;
+        public const uint ACT_FLAG_AIR = 0x00000800;
+        public const uint ACT_FLAG_INTANGIBLE = 0x00001000;
+        public const uint ACT_FLAG_SWIMMING = 0x00002000;
+        public const uint ACT_FLAG_METAL_WATER = 0x00004000;
+        public const uint ACT_FLAG_SHORT_HITBOX = 0x00008000;
+        public const uint ACT_FLAG_RIDING_SHELL = 0x00010000;
+        public const uint ACT_FLAG_INVULNERABLE = 0x00020000;
+        public const uint ACT_FLAG_BUTT_OR_STOMACH_SLIDE = 0x00040000;
+        public const uint ACT_FLAG_DIVING = 0x00080000;
+        public const uint ACT_FLAG_ON_POLE = 0x00100000;
+        public const uint ACT_FLAG_HANGING = 0x00200000;
+        public const uint ACT_FLAG_IDLE = 0x00400000;
+        public const uint ACT_FLAG_ATTACKING = 0x00800000;
+        public const uint ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION = 0x01000000;
+        public const uint ACT_FLAG_CONTROL_JUMP_HEIGHT = 0x02000000;
+        public const uint ACT_FLAG_ALLOW_FIRST_PERSON = 0x04000000;
+        public const uint ACT_FLAG_PAUSE_EXIT = 0x08000000;
+        public const uint ACT_FLAG_SWIMMING_OR_FLYING = 0x10000000;
+        public const uint ACT_FLAG_WATER_OR_TEXT = 0x20000000;
+        public const uint ACT_FLAG_THROWING = 0x80000000;
+
         // ACTIONS
         // group 0x000: stationary actions
         public const uint ACT_IDLE = 0x0C400201;// (0x001 | ACT_FLAG_STATIONARY | ACT_FLAG_IDLE | ACT_FLAG_ALLOW_FIRST_PERSON | ACT_FLAG_PAUSE_EXIT)
@@ -191,7 +215,7 @@ namespace LibSM64{
 
         // group 0x100: cutscene actions
         public const uint ACT_DISAPPEARED = 0x00001300;// (0x100 | ACT_FLAG_STATIONARY | ACT_FLAG_uintANGIBLE)
-        public const uint ACT_uintRO_CUTSCENE = 0x04001301;// (0x101 | ACT_FLAG_STATIONARY | ACT_FLAG_uintANGIBLE | ACT_FLAG_ALLOW_FIRST_PERSON)
+        public const uint ACT_INTRO_CUTSCENE = 0x04001301;// (0x101 | ACT_FLAG_STATIONARY | ACT_FLAG_uintANGIBLE | ACT_FLAG_ALLOW_FIRST_PERSON)
         public const uint ACT_STAR_DANCE_EXIT = 0x00001302;// (0x102 | ACT_FLAG_STATIONARY | ACT_FLAG_uintANGIBLE)
         public const uint ACT_STAR_DANCE_WATER = 0x00001303;// (0x103 | ACT_FLAG_STATIONARY | ACT_FLAG_uintANGIBLE)
         public const uint ACT_FALL_AFTER_STAR_GRAB = 0x00001904;// (0x104 | ACT_FLAG_AIR | ACT_FLAG_uintANGIBLE)
